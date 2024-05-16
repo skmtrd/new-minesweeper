@@ -1,32 +1,19 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import styles from './index.module.css';
 const getRandomIntNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-
-const initBombMap = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const initUserInput = [
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-];
+const create2DArray = (rows: number, cols: number, value: number) => {
+  const array = [];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      row.push(value);
+    }
+    array.push(row);
+  }
+  return array;
+};
 const board = [
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -38,7 +25,6 @@ const board = [
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
 ];
-
 const directions = [
   [0, 1],
   [1, 0],
@@ -49,7 +35,6 @@ const directions = [
   [-1, 1],
   [-1, -1],
 ];
-
 const rescuersiveOpen = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
   if (bombMap[y] === undefined || userInput[y] === undefined || userInput[y][x] === 0)
     return userInput;
@@ -64,7 +49,6 @@ const rescuersiveOpen = (bombMap: number[][], userInput: number[][], x: number, 
   }
   return userInput;
 };
-
 const openCell = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
   if (userInput[y][x] === 10) {
     return userInput;
@@ -76,7 +60,6 @@ const openCell = (bombMap: number[][], userInput: number[][], x: number, y: numb
     return newUserInput;
   }
 };
-
 const firstBombMapReload = (
   bombMap: number[][],
   x: number,
@@ -89,7 +72,6 @@ const firstBombMapReload = (
   const newBombMapWithNumber: number[][] = plantNumber(newBombMap, mapSize);
   return newBombMapWithNumber;
 };
-
 const plantBomb = (bombMap: number[][], x: number, y: number, bombCount: number) => {
   while (bombMap.flat().filter((cell) => cell === 11).length < bombCount) {
     const bombX = getRandomIntNumber(0, 8);
@@ -100,7 +82,6 @@ const plantBomb = (bombMap: number[][], x: number, y: number, bombCount: number)
   }
   return bombMap;
 };
-
 const plantNumber = (bombMap: number[][], mapSize: number[]) => {
   for (let y = 0; y < mapSize[0]; y++) {
     for (let x = 0; x < mapSize[1]; x++) {
@@ -135,14 +116,18 @@ const creatBoard = (
 const Home = () => {
   const [mapSize, setMapSize] = useState([9, 9]);
   const [bombCount, setBombCount] = useState(10);
-  const [bombMap, setBombMap] = useState(initBombMap);
-  const [userInput, setUserInput] = useState(initUserInput);
-
+  const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
+  const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
   const resetHandler = () => {
     console.log('reset');
-    creatBoard(initBombMap, initUserInput, board, mapSize);
-    setBombMap(initBombMap);
-    setUserInput(initUserInput);
+    creatBoard(
+      create2DArray(mapSize[0], mapSize[1], 0),
+      create2DArray(mapSize[0], mapSize[1], -1),
+      board,
+      mapSize,
+    );
+    setBombMap(create2DArray(mapSize[0], mapSize[1], 0));
+    setUserInput(create2DArray(mapSize[0], mapSize[1], -1));
   };
   const handleRightClick = (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
