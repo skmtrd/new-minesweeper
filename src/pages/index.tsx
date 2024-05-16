@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import styles from './index.module.css';
 const getRandomIntNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -35,6 +35,13 @@ const directions = [
   [-1, 1],
   [-1, -1],
 ];
+
+const judgeFinish = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
+  if (bombMap[y][x] === 11) {
+    return true;
+  }
+  return false;
+};
 const rescuersiveOpen = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
   if (bombMap[y] === undefined || userInput[y] === undefined || userInput[y][x] === 0)
     return userInput;
@@ -102,10 +109,13 @@ const creatBoard = (
   userInput: number[][],
   board: number[][],
   mapSize: number[],
+  isFinished: boolean,
 ) => {
   for (let y = 0; y < mapSize[0]; y++) {
     for (let x = 0; x < mapSize[1]; x++) {
-      if (userInput[y][x] === 0) {
+      if (isFinished === true && bombMap[y][x] === 11) {
+        board[y][x] = bombMap[y][x];
+      } else if (userInput[y][x] === 0) {
         board[y][x] = bombMap[y][x];
       } else if (userInput[y][x] === -1 || userInput[y][x] === 10) {
         board[y][x] = userInput[y][x];
@@ -114,18 +124,21 @@ const creatBoard = (
   }
 };
 const Home = () => {
+  const [isFinished, setIsFinihed] = useState(false);
   const [mapSize, setMapSize] = useState([9, 9]);
   const [bombCount, setBombCount] = useState(10);
   const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
   const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
   const resetHandler = () => {
-    console.log('reset');
+    const preIsFinished = false;
     creatBoard(
       create2DArray(mapSize[0], mapSize[1], 0),
       create2DArray(mapSize[0], mapSize[1], -1),
       board,
       mapSize,
+      preIsFinished,
     );
+    setIsFinihed(preIsFinished);
     setBombMap(create2DArray(mapSize[0], mapSize[1], 0));
     setUserInput(create2DArray(mapSize[0], mapSize[1], -1));
   };
@@ -138,7 +151,7 @@ const Home = () => {
       newUserInput[y][x] = -1;
     }
     setUserInput(newUserInput);
-    creatBoard(bombMap, newUserInput, board, mapSize);
+    creatBoard(bombMap, newUserInput, board, mapSize, isFinished);
   };
   const clickHandler = (x: number, y: number) => {
     const [newBombMap, newUserInput, newBombCount, newMapSize] = [
@@ -147,9 +160,11 @@ const Home = () => {
       structuredClone(bombCount),
       structuredClone(mapSize),
     ];
+    const preIsFinished = judgeFinish(newBombMap, newUserInput, x, y);
     const relodedBombMap = firstBombMapReload(newBombMap, x, y, bombCount, mapSize);
     const openedUserInput: number[][] = openCell(relodedBombMap, newUserInput, x, y);
-    creatBoard(relodedBombMap, openedUserInput, board, newMapSize);
+    creatBoard(relodedBombMap, openedUserInput, board, newMapSize, preIsFinished);
+    setIsFinihed(preIsFinished);
     setBombMap(relodedBombMap);
     setUserInput(openedUserInput);
     setBombCount(newBombCount);
@@ -158,6 +173,7 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
+      <div>{isFinished === true ? 'finish' : ''}</div>
       <div className={styles.topBoard}>
         <div className={styles.numberBox} style={{ marginRight: 10 }}>
           100
