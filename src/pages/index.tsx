@@ -7,9 +7,10 @@ import {
   toggleFlag,
   creatBoard,
   firstBombMapReload,
+  levelsetting,
 } from './function';
 
-const board = [
+let board = [
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -22,11 +23,27 @@ const board = [
 ];
 
 const Home = () => {
+  const [level, setLevel] = useState(0);
   const [isFinished, setIsFinihed] = useState(false);
   const [mapSize, setMapSize] = useState([9, 9]);
   const [bombCount, setBombCount] = useState(10);
   const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
   const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
+  const choiceLevelHandler = (level: number) => {
+    const settings = levelsetting(level);
+    const preMapSize = [settings[0], settings[1]];
+    const preBombCount = settings[2];
+    const preBombMap = create2DArray(preMapSize[0], preMapSize[1], 0);
+    const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
+    setLevel(level);
+    board = create2DArray(preMapSize[0], preMapSize[1], -1);
+    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    setIsFinihed(false);
+    setMapSize(preMapSize);
+    setBombCount(preBombCount);
+    setBombMap(preBombMap);
+    setUserInput(preUserInput);
+  };
   const resetHandler = () => {
     const preIsFinished = false;
     creatBoard(
@@ -61,9 +78,23 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.choceLevel}>
+        <div className={styles.levelStrings} onClick={() => choiceLevelHandler(0)}>
+          初級
+        </div>
+        <div className={styles.levelStrings} onClick={() => choiceLevelHandler(1)}>
+          中級
+        </div>
+        <div className={styles.levelStrings} onClick={() => choiceLevelHandler(2)}>
+          上級
+        </div>
+      </div>
       <div>{isFinished === true ? 'finish' : ''}</div>
-      <div className={styles.baseBoard}>
-        <div className={styles.topBoard}>
+      <div
+        className={styles.baseBoard}
+        style={{ width: mapSize[1] * 30 + 50, height: mapSize[0] * 30 + 150 }}
+      >
+        <div className={styles.topBoard} style={{ width: mapSize[1] * 30 }}>
           <div className={styles.numberBox} style={{ marginRight: 10 }}>
             {bombCount - board.flat().filter((cell) => cell === 10).length}
           </div>
@@ -78,7 +109,7 @@ const Home = () => {
             100
           </div>
         </div>
-        <div className={styles.board}>
+        <div className={styles.board} style={{ width: mapSize[1] * 30, height: mapSize[0] * 30 }}>
           {board.map((row, y) =>
             row.map((cell, x) => (
               <div

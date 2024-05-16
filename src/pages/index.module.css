@@ -95,3 +95,21 @@
   border-color: #808080 #fff #fff #808080;
   border-width: 10px;
 }
+
+.choceLevel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1000px;
+  height: 300px;
+}
+
+.levelStrings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 80px;
+  font-size: 20px;
+  color: blue;
+}

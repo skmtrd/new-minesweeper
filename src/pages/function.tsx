@@ -10,6 +10,7 @@ export {
   firstBombMapReload,
   getRandomIntNumber,
   directions,
+  levelsetting,
 };
 
 const directions = [
@@ -100,14 +101,20 @@ const firstBombMapReload = (
   mapSize: number[],
 ) => {
   if (bombMap.flat().filter((cell) => cell === 11).length !== 0) return bombMap;
-  const newBombMap: number[][] = plantBomb(bombMap, x, y, bombCount);
+  const newBombMap: number[][] = plantBomb(bombMap, x, y, bombCount, mapSize);
   const newBombMapWithNumber: number[][] = plantNumber(newBombMap, mapSize);
   return newBombMapWithNumber;
 };
-const plantBomb = (bombMap: number[][], x: number, y: number, bombCount: number) => {
+const plantBomb = (
+  bombMap: number[][],
+  x: number,
+  y: number,
+  bombCount: number,
+  mapSize: number[],
+) => {
   while (bombMap.flat().filter((cell) => cell === 11).length < bombCount) {
-    const bombX = getRandomIntNumber(0, 8);
-    const bombY = getRandomIntNumber(0, 8);
+    const bombX = getRandomIntNumber(0, mapSize[1] - 1);
+    const bombY = getRandomIntNumber(0, mapSize[0] - 1);
     if (bombX !== x && bombY !== y) {
       bombMap[bombY][bombX] = 11;
     }
@@ -154,5 +161,18 @@ const creatBoard = (
         board[y][x] = userInput[y][x];
       }
     }
+  }
+};
+
+const levelsetting = (level: number) => {
+  switch (level) {
+    case 0:
+      return [9, 9, 10];
+    case 1:
+      return [16, 16, 40];
+    case 2:
+      return [16, 30, 99];
+    default:
+      return [9, 9, 10];
   }
 };
