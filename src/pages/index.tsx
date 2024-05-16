@@ -130,7 +130,10 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
   const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
   const resetHandler = () => {
+<<<<<<< HEAD
     const preIsFinished = false;
+=======
+>>>>>>> b095315bcce5a6c548a74a61d8c8f721f77462b6
     creatBoard(
       create2DArray(mapSize[0], mapSize[1], 0),
       create2DArray(mapSize[0], mapSize[1], -1),
