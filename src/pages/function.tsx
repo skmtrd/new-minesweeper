@@ -37,12 +37,29 @@ const create2DArray = (rows: number, cols: number, value: number) => {
   return array;
 };
 
-const judgeFinish = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
+const judgeFinish = (
+  bombMap: number[][],
+  userInput: number[][],
+  x: number,
+  y: number,
+  bombCount: number,
+) => {
+  console.log(
+    userInput.flat().filter((cell) => cell === -1).length +
+      userInput.flat().filter((cell) => cell === 10).length,
+  );
+  if (
+    userInput.flat().filter((cell) => cell === -1).length +
+      userInput.flat().filter((cell) => cell === 10).length ===
+    bombCount
+  )
+    return true;
   if (bombMap[y][x] === 11) {
     return true;
   }
   return false;
 };
+
 const rescuersiveOpen = (bombMap: number[][], userInput: number[][], x: number, y: number) => {
   if (bombMap[y] === undefined || userInput[y] === undefined || userInput[y][x] === 0)
     return userInput;

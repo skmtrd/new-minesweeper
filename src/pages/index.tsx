@@ -48,9 +48,11 @@ const Home = () => {
   };
   const clickHandler = (x: number, y: number) => {
     const [newBombMap, newUserInput] = [structuredClone(bombMap), structuredClone(userInput)];
-    const preIsFinished = judgeFinish(newBombMap, newUserInput, x, y);
     const relodedBombMap = firstBombMapReload(newBombMap, x, y, bombCount, mapSize);
     const openedUserInput: number[][] = openCell(relodedBombMap, newUserInput, x, y, isFinished);
+    const preIsFinished = isFinished
+      ? true
+      : judgeFinish(relodedBombMap, openedUserInput, x, y, bombCount);
     creatBoard(relodedBombMap, openedUserInput, board, mapSize, preIsFinished);
     setIsFinihed(preIsFinished);
     setBombMap(relodedBombMap);
@@ -63,7 +65,7 @@ const Home = () => {
       <div className={styles.baseBoard}>
         <div className={styles.topBoard}>
           <div className={styles.numberBox} style={{ marginRight: 10 }}>
-            100
+            {bombCount - board.flat().filter((cell) => cell === 10).length}
           </div>
           <div className={styles.resetBottom}>
             <div
