@@ -23,7 +23,6 @@ let board = [
 ];
 
 const Home = () => {
-  const [level, setLevel] = useState(0);
   const [isFinished, setIsFinihed] = useState(false);
   const [mapSize, setMapSize] = useState([9, 9]);
   const [bombCount, setBombCount] = useState(10);
@@ -35,7 +34,6 @@ const Home = () => {
     const preBombCount = settings[2];
     const preBombMap = create2DArray(preMapSize[0], preMapSize[1], 0);
     const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
-    setLevel(level);
     board = create2DArray(preMapSize[0], preMapSize[1], -1);
     creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
     setIsFinihed(false);
