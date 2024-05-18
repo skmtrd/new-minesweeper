@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 import {
   create2DArray,
@@ -28,6 +28,21 @@ const Home = () => {
   const [bombCount, setBombCount] = useState(10);
   const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
   const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
+  const [isActive, setIsActive] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    let interval: number | null = null;
+    if (isActive) {
+      interval = window.setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+    } else if (!isActive && seconds !== 0) {
+      window.clearInterval(interval ?? 0);
+    }
+    return () => clearInterval(interval ?? 0);
+  }, [isActive, seconds]);
+
   const choiceLevelHandler = (level: number) => {
     const settings = levelsetting(level);
     const preMapSize = [settings[0], settings[1]];
@@ -36,6 +51,8 @@ const Home = () => {
     const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
     board = create2DArray(preMapSize[0], preMapSize[1], -1);
     creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    setIsActive(false);
+    setSeconds(0);
     setIsFinihed(false);
     setMapSize(preMapSize);
     setBombCount(preBombCount);
@@ -43,6 +60,8 @@ const Home = () => {
     setUserInput(preUserInput);
   };
   const resetHandler = () => {
+    setIsActive(false);
+    setSeconds(0);
     const preIsFinished = false;
     creatBoard(
       create2DArray(mapSize[0], mapSize[1], 0),
@@ -62,6 +81,7 @@ const Home = () => {
     creatBoard(bombMap, newUserInput, board, mapSize, isFinished);
   };
   const clickHandler = (x: number, y: number) => {
+    setIsActive(true);
     const [newBombMap, newUserInput] = [structuredClone(bombMap), structuredClone(userInput)];
     const relodedBombMap = firstBombMapReload(newBombMap, x, y, bombCount, mapSize);
     const openedUserInput: number[][] = openCell(relodedBombMap, newUserInput, x, y, isFinished);
@@ -69,6 +89,7 @@ const Home = () => {
       ? true
       : judgeFinish(relodedBombMap, openedUserInput, x, y, bombCount);
     creatBoard(relodedBombMap, openedUserInput, board, mapSize, preIsFinished);
+    setIsActive(preIsFinished ? false : true);
     setIsFinihed(preIsFinished);
     setBombMap(relodedBombMap);
     setUserInput(openedUserInput);
@@ -87,7 +108,6 @@ const Home = () => {
           上級
         </div>
       </div>
-      <div>{isFinished === true ? 'finish' : ''}</div>
       <div
         className={styles.baseBoard}
         style={{ width: mapSize[1] * 30 + 50, height: mapSize[0] * 30 + 150 }}
@@ -104,7 +124,7 @@ const Home = () => {
             />
           </div>
           <div className={styles.numberBox} style={{ marginLeft: 10 }}>
-            100
+            {seconds}
           </div>
         </div>
         <div className={styles.board} style={{ width: mapSize[1] * 30, height: mapSize[0] * 30 }}>
