@@ -101,7 +101,9 @@
   align-items: center;
   justify-content: center;
   width: 1000px;
-  height: 300px;
+  height: 80px;
+
+  /* border: solid; */
 }
 
 .levelStrings {
@@ -109,7 +111,50 @@
   align-items: center;
   justify-content: center;
   width: 100px;
-  height: 80px;
+  height: 50px;
   font-size: 20px;
-  color: blue;
+  color: #9436ff;
+}
+
+.choceLevel :hover {
+  color: #816e96;
+}
+
+.settingCustomBox {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 1000px;
+  height: 75px;
+  font-size: 8px;
+}
+
+.settingCustomBox :active {
+  background-color: #818181;
+  border-color: #808080;
+}
+
+.input {
+  width: 80px;
+}
+
+.reload {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 30px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #000;
+  background-color: #c6c6c6;
+  border: solid;
+  border-color: #fff #808080 #808080 #fff;
+  border-width: 5px;
+  box-shadow:
+    rgb(17 17 26 / 10%) 1px 8px 24px,
+    rgb(17 17 26 / 10%) 1px 16px 56px,
+    rgb(17 17 26 / 10%) 1px 24px 80px;
 }

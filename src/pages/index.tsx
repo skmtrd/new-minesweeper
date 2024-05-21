@@ -26,6 +26,7 @@ const Home = () => {
   const [isFinished, setIsFinihed] = useState(false);
   const [mapSize, setMapSize] = useState([9, 9]);
   const [bombCount, setBombCount] = useState(10);
+  const [preSettings, setPreSettings] = useState([9, 9, 10]);
   const [bombMap, setBombMap] = useState(create2DArray(mapSize[0], mapSize[1], 0));
   const [userInput, setUserInput] = useState(create2DArray(mapSize[0], mapSize[1], -1));
   const [isActive, setIsActive] = useState(false);
@@ -43,6 +44,25 @@ const Home = () => {
     return () => clearInterval(interval ?? 0);
   }, [isActive, seconds]);
 
+  const customSettingHandler = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPreSettings = structuredClone(preSettings);
+    newPreSettings[index] = Number(e.target.value);
+    setPreSettings(newPreSettings);
+  };
+
+  const reloadHandler = () => {
+    const preMapSize = [preSettings[0], preSettings[1]];
+    const preBombCount = preSettings[2];
+    const preBombMap = create2DArray(preMapSize[0], preMapSize[1], 0);
+    const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
+    board = create2DArray(preMapSize[0], preMapSize[1], -1);
+    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    setMapSize(preMapSize);
+    setBombCount(preBombCount);
+    setBombMap(preBombMap);
+    setUserInput(preUserInput);
+  };
+
   const choiceLevelHandler = (level: number) => {
     const settings = levelsetting(level);
     const preMapSize = [settings[0], settings[1]];
@@ -51,6 +71,7 @@ const Home = () => {
     const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
     board = create2DArray(preMapSize[0], preMapSize[1], -1);
     creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    setPreSettings([settings[0], settings[1], settings[2]]);
     setIsActive(false);
     setSeconds(0);
     setIsFinihed(false);
@@ -107,10 +128,39 @@ const Home = () => {
         <div className={styles.levelStrings} onClick={() => choiceLevelHandler(2)}>
           上級
         </div>
+        <div className={styles.levelStrings} onClick={() => choiceLevelHandler(3)}>
+          カスタム
+        </div>
+      </div>
+      <div className={styles.settingCustomBox}>
+        <h1>縦幅</h1>
+        <input
+          className={styles.input}
+          type="number"
+          value={preSettings[0]}
+          onChange={(e) => customSettingHandler(0, e)}
+        />
+        <h1>横幅</h1>
+        <input
+          className={styles.input}
+          type="number"
+          value={preSettings[1]}
+          onChange={(e) => customSettingHandler(1, e)}
+        />
+        <h1>爆弾の数</h1>
+        <input
+          className={styles.input}
+          type="number"
+          value={preSettings[2]}
+          onChange={(e) => customSettingHandler(2, e)}
+        />
+        <div className={styles.reload} onClick={reloadHandler}>
+          更新
+        </div>
       </div>
       <div
         className={styles.baseBoard}
-        style={{ width: mapSize[1] * 30 + 50, height: mapSize[0] * 30 + 150 }}
+        style={{ width: mapSize[1] * 30 + 50, height: mapSize[0] * 30 + 180 }}
       >
         <div className={styles.topBoard} style={{ width: mapSize[1] * 30 }}>
           <div className={styles.numberBox} style={{ marginRight: 10 }}>

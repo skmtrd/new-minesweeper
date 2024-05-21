@@ -172,6 +172,8 @@ const levelsetting = (level: number) => {
       return [16, 16, 40];
     case 2:
       return [16, 30, 99];
+    case 3:
+      return [16, 30, 99];
     default:
       return [9, 9, 10];
   }
