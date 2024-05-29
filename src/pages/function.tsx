@@ -78,7 +78,7 @@ const openCell = (
   y: number,
   isFinished: boolean,
 ) => {
-  if (userInput[y][x] === 10 || isFinished) return userInput;
+  if (isFinished) return userInput;
   if (userInput[y][x] === 10) {
     return userInput;
   } else if (bombMap[y][x] !== 0) {
@@ -151,12 +151,18 @@ const creatBoard = (
   const board = create2DArray(mapSize[0], mapSize[1], -1);
   for (let i = 0; i < mapSize[0]; i++) {
     for (let j = 0; j < mapSize[1]; j++) {
-      if (isFinished === true && bombMap[y][x] === 11) {
-        board[i][j] = bombMap[i][j];
-      } else if (userInput[i][j] === 0) {
+      if (userInput[i][j] === 0) {
         board[i][j] = bombMap[i][j];
       } else if (userInput[i][j] === -1 || userInput[i][j] === 10) {
         board[i][j] = userInput[i][j];
+        if (isFinished === true && bombMap[i][j] === 11) {
+          board[i][j] = 10;
+        }
+      }
+      if (isFinished === true && bombMap[y][x] === 11) {
+        if (bombMap[i][j] === 11) {
+          board[i][j] = 11;
+        }
       }
     }
   }

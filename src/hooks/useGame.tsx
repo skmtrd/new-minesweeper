@@ -89,11 +89,13 @@ export const useGame = () => {
   };
   const handleRightClick = (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (isFinished) return;
     const newUserInput = structuredClone(userInput);
     setUserInput(toggleFlag(newUserInput, x, y));
     setBoard(creatBoard(bombMap, newUserInput, mapSize, isFinished, x, y));
   };
   const clickHandler = (x: number, y: number) => {
+    if (isFinished) return;
     setIsActive(true);
     const [newBombMap, newUserInput] = [structuredClone(bombMap), structuredClone(userInput)];
     const relodedBombMap = firstBombMapReload(newBombMap, x, y, bombCount, mapSize);
