@@ -56,11 +56,14 @@ const Home = () => {
     const preBombMap = create2DArray(preMapSize[0], preMapSize[1], 0);
     const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
     board = create2DArray(preMapSize[0], preMapSize[1], -1);
-    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished, 0, 0);
     setMapSize(preMapSize);
     setBombCount(preBombCount);
     setBombMap(preBombMap);
     setUserInput(preUserInput);
+    setIsActive(false);
+    setSeconds(0);
+    setIsFinihed(false);
   };
 
   const choiceLevelHandler = (level: number) => {
@@ -70,7 +73,7 @@ const Home = () => {
     const preBombMap = create2DArray(preMapSize[0], preMapSize[1], 0);
     const preUserInput = create2DArray(preMapSize[0], preMapSize[1], -1);
     board = create2DArray(preMapSize[0], preMapSize[1], -1);
-    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished);
+    creatBoard(preBombMap, preUserInput, board, preMapSize, isFinished, 0, 0);
     setPreSettings([settings[0], settings[1], settings[2]]);
     setIsActive(false);
     setSeconds(0);
@@ -90,6 +93,8 @@ const Home = () => {
       board,
       mapSize,
       preIsFinished,
+      0,
+      0,
     );
     setIsFinihed(preIsFinished);
     setBombMap(create2DArray(mapSize[0], mapSize[1], 0));
@@ -99,7 +104,7 @@ const Home = () => {
     event.preventDefault();
     const newUserInput = structuredClone(userInput);
     setUserInput(toggleFlag(newUserInput, x, y));
-    creatBoard(bombMap, newUserInput, board, mapSize, isFinished);
+    creatBoard(bombMap, newUserInput, board, mapSize, isFinished, x, y);
   };
   const clickHandler = (x: number, y: number) => {
     setIsActive(true);
@@ -109,7 +114,7 @@ const Home = () => {
     const preIsFinished = isFinished
       ? true
       : judgeFinish(relodedBombMap, openedUserInput, x, y, bombCount);
-    creatBoard(relodedBombMap, openedUserInput, board, mapSize, preIsFinished);
+    creatBoard(relodedBombMap, openedUserInput, board, mapSize, preIsFinished, x, y);
     setIsActive(preIsFinished ? false : true);
     setIsFinihed(preIsFinished);
     setBombMap(relodedBombMap);
@@ -170,7 +175,14 @@ const Home = () => {
             <div
               className={styles.faceImage}
               onClick={() => resetHandler()}
-              style={{ backgroundPosition: '-242px 0px' }}
+              // style={{ backgroundPosition: '-242px 0px' }}
+              style={{
+                backgroundPosition: isFinished
+                  ? board.flat().some((cell) => cell === 11)
+                    ? '-286px 0px'
+                    : '-264px 0px'
+                  : '-242px 0px',
+              }}
             />
           </div>
           <div className={styles.numberBox} style={{ marginLeft: 10 }}>

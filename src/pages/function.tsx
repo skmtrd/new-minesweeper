@@ -45,10 +45,6 @@ const judgeFinish = (
   y: number,
   bombCount: number,
 ) => {
-  console.log(
-    userInput.flat().filter((cell) => cell === -1).length +
-      userInput.flat().filter((cell) => cell === 10).length,
-  );
   if (
     userInput.flat().filter((cell) => cell === -1).length +
       userInput.flat().filter((cell) => cell === 10).length ===
@@ -150,15 +146,17 @@ const creatBoard = (
   board: number[][],
   mapSize: number[],
   isFinished: boolean,
+  x: number,
+  y: number,
 ) => {
-  for (let y = 0; y < mapSize[0]; y++) {
-    for (let x = 0; x < mapSize[1]; x++) {
+  for (let i = 0; i < mapSize[0]; i++) {
+    for (let j = 0; j < mapSize[1]; j++) {
       if (isFinished === true && bombMap[y][x] === 11) {
-        board[y][x] = bombMap[y][x];
-      } else if (userInput[y][x] === 0) {
-        board[y][x] = bombMap[y][x];
-      } else if (userInput[y][x] === -1 || userInput[y][x] === 10) {
-        board[y][x] = userInput[y][x];
+        board[i][j] = bombMap[i][j];
+      } else if (userInput[i][j] === 0) {
+        board[i][j] = bombMap[i][j];
+      } else if (userInput[i][j] === -1 || userInput[i][j] === 10) {
+        board[i][j] = userInput[i][j];
       }
     }
   }
