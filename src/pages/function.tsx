@@ -143,12 +143,12 @@ const toggleFlag = (userInput: number[][], x: number, y: number) => {
 const creatBoard = (
   bombMap: number[][],
   userInput: number[][],
-  board: number[][],
   mapSize: number[],
   isFinished: boolean,
   x: number,
   y: number,
 ) => {
+  const board = create2DArray(mapSize[0], mapSize[1], -1);
   for (let i = 0; i < mapSize[0]; i++) {
     for (let j = 0; j < mapSize[1]; j++) {
       if (isFinished === true && bombMap[y][x] === 11) {
@@ -160,6 +160,7 @@ const creatBoard = (
       }
     }
   }
+  return board;
 };
 
 const levelsetting = (level: number) => {
