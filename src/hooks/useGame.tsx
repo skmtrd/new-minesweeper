@@ -7,7 +7,7 @@ import {
   creatBoard,
   firstBombMapReload,
   levelsetting,
-} from '../pages/function';
+} from '../function';
 
 export const useGame = () => {
   const [board, setBoard] = useState(create2DArray(9, 9, -1));
